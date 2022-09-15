@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: yet_another_disk_backend
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    restart: always
+  db:
+    image: postgres:14.5-alpine
+    container_name: yet_another_disk_db
+    environment:
+      POSTGRES_DB: "anotherdisk"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "s3cr3t"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - .:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
