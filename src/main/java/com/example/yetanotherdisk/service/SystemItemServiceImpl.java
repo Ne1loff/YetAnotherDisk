@@ -82,6 +82,8 @@ public class SystemItemServiceImpl implements SystemItemService, SystemItemHisto
 
                 var oldEntity = oldEntities.get(entity.getId());
 
+                if (entity.getType() != oldEntity.getType()) throw new ValidationError();
+
                 var oldParentId = oldEntity.getParentId();
                 var newParentId = entity.getParentId();
 
