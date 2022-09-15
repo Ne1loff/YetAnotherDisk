@@ -12,6 +12,6 @@ public abstract class AbstractDto implements Serializable {
     private String id;
     private SystemItemType type;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSVV")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "Z")
     private ZonedDateTime date;
 }

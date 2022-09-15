@@ -19,13 +19,13 @@ public class SystemItemController {
 
     @PostMapping("/imports")
     public ResponseEntity<HttpStatus> importItems(@RequestBody SystemItemImportRequest request) {
-        service.importSystemItems(request);
+        service.importItems(request);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete/{id}")
-    ResponseEntity<HttpStatus> deleteItem(@PathVariable String id) {
-        service.deleteItem(id);
+    ResponseEntity<HttpStatus> deleteItem(@PathVariable String id, @RequestParam String date) {
+        service.deleteItem(id, date);
         return ResponseEntity.ok().build();
     }
 
@@ -36,7 +36,7 @@ public class SystemItemController {
 
     @GetMapping("/updates")
     ResponseEntity<SystemItemHistoryResponse> getSales(@RequestParam String date) {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(service.getAllHistoryForLastDay(date));
     }
 
     @GetMapping("/node/{id}/history")
@@ -44,6 +44,6 @@ public class SystemItemController {
                                                                    @RequestParam String dateStart,
                                                                    @RequestParam(defaultValue = "") String dateEnd
     ) {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(service.getItemHistoryBetween(id, dateStart, dateEnd));
     }
 }

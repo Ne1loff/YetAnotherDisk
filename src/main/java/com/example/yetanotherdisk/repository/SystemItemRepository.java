@@ -23,12 +23,14 @@ public interface SystemItemRepository extends JpaRepository<SystemItem, String> 
     @Query(value = "SELECT item FROM SystemItem item WHERE item.id IN :ids")
     Set<SystemItem> findSystemItemsByIds(@NotNull @Param("ids") Collection<String> ids);
 
+    @Query(value = "select item from SystemItem item WHERE item.id IN :ids AND item.type = 1")
+    Set<SystemItem> findSystemItemsByIdsAndTypeIsFolder(@Param("ids") Collection<String> ids);
 
     @Modifying(clearAutomatically = true)
     @Query(value = """
             UPDATE system_item SET size = size + :sizeDiff, date = :date WHERE id IN :ids
             """, nativeQuery = true)
-    void updateSizeAndDateById(
+    void updateSizeAndDateByIds(
             @NotNull @Param("sizeDiff") Long diff,
             @NotNull @Param("date") ZonedDateTime date,
             @Param("ids") Collection<String> ids
@@ -44,5 +46,16 @@ public interface SystemItemRepository extends JpaRepository<SystemItem, String> 
             SELECT id FROM get_parents
             """, nativeQuery = true)
     List<String> getParentsIdByItemId(@NotNull @Param("id") String id);
+
+    @Query(value = """
+            WITH RECURSIVE get_parents(id) AS (
+                SELECT id, parent_id FROM system_item WHERE id = :id
+                UNION
+                SELECT si.id, si.parent_id FROM system_item si
+                JOIN get_parents gp ON gp.id = si.parent_id
+            )
+            SELECT id FROM get_parents
+            """, nativeQuery = true)
+    List<String> getChildrenIdByItemId(@NotNull @Param("id") String id);
 
 }

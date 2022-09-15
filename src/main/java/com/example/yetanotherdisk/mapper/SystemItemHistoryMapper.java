@@ -3,9 +3,11 @@ package com.example.yetanotherdisk.mapper;
 import com.example.yetanotherdisk.dto.SystemItemHistoryUnitResponse;
 import com.example.yetanotherdisk.entity.SystemItemHistoryUnit;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+@Component
 public class SystemItemHistoryMapper extends AbstractMapper<SystemItemHistoryUnit, SystemItemHistoryUnitResponse> {
 
     public SystemItemHistoryMapper(ModelMapper mapper) {

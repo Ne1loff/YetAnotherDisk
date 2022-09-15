@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.Objects;
 
 @Component
 public class ValidatorImpl implements Validator {
@@ -21,12 +22,24 @@ public class ValidatorImpl implements Validator {
     }
 
     @Override
-    public void isValidImport(SystemItemImport systemItemImport) {
-        if (systemItemImport.getId() == null ||
-                systemItemImport.getType() == null
-        ) throw new ValidationError();
+    public void isValidImport(SystemItemImport itemImport) {
+        if (itemImport.getId() == null || itemImport.getType() == null)
+            throw new ValidationError();
 
-        if (systemItemImport.getType() == SystemItemType.FOLDER && systemItemImport.getSize() != null) throw new ValidationError();
-        if (systemItemImport.getType() == SystemItemType.FILE && systemItemImport.getSize() == null) throw new ValidationError();
+        if (Objects.equals(itemImport.getParentId(), itemImport.getId()))
+            throw new ValidationError();
+
+
+        if (itemImport.getType() == SystemItemType.FOLDER) {
+            if (itemImport.getSize() != null || itemImport.getUrl() != null)
+                throw new ValidationError();
+        } else {
+            if (itemImport.getSize() == null
+                    || itemImport.getSize() <= 0
+                    || itemImport.getUrl() == null
+                    || itemImport.getUrl().length() > 255)
+                throw new ValidationError();
+        }
+
     }
 }
